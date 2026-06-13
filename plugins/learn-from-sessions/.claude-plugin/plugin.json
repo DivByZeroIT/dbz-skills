@@ -1,0 +1,13 @@
+{
+  "name": "learn-from-sessions",
+  "description": "Offline learning for Claude Code: scan ~/.claude/projects logs, find repeated failures and the fixes that resolved them, and propose lean rules to add to CLAUDE.md / MEMORY.md. Local-only, no API key. Inspired by headroom's `learn`.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Massimo Chieruzzi",
+    "url": "https://github.com/DivByZeroIT"
+  },
+  "homepage": "https://github.com/DivByZeroIT/learn-from-sessions",
+  "repository": "https://github.com/DivByZeroIT/learn-from-sessions",
+  "license": "MIT",
+  "keywords": ["claude-code", "skill", "memory", "context", "learning", "self-improvement"]
+}
