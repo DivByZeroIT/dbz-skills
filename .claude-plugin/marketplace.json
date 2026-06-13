@@ -5,13 +5,12 @@
     "url": "https://github.com/DivByZeroIT"
   },
   "metadata": {
-    "description": "Lean, single-purpose skills for Claude Code by DivByZero.",
-    "pluginRoot": "./plugins"
+    "description": "Lean, single-purpose skills for Claude Code by DivByZero."
   },
   "plugins": [
     {
       "name": "learn-from-sessions",
-      "source": "learn-from-sessions",
+      "source": "./plugins/learn-from-sessions",
       "description": "Mine past Claude Code session logs for recurring failures and propose lean CLAUDE.md / MEMORY.md rules. Local-only; inspired by headroom's `learn`."
     }
   ]
