@@ -9,6 +9,9 @@ corrections you gave the agent), and **proposes** concrete rules to add to your
 It never auto-edits anything: it shows you the proposed learnings and asks for
 approval before writing.
 
+> ℹ️ This repo is the **`dbz-skills`** Claude Code plugin marketplace. Its first
+> (and currently only) plugin is **`learn-from-sessions`**, documented below.
+
 > **Inspired by [headroom](https://github.com/chopratejas/headroom).** Headroom is
 > a broad context-optimization toolkit (a compression proxy, MCP tools, cross-agent
 > memory, and an offline `learn` command). This project deliberately does **one
@@ -37,7 +40,7 @@ auto-writer are what this project intentionally drops.
 ## Install
 
 ```text
-/plugin marketplace add DivByZeroIT/learn-from-sessions
+/plugin marketplace add DivByZeroIT/dbz-skills
 /plugin install learn-from-sessions@dbz-skills
 ```
 
@@ -54,8 +57,8 @@ Or just ask: *"learn from my sessions in this project."*
 Copy the skill into your personal skills directory:
 
 ```bash
-git clone https://github.com/DivByZeroIT/learn-from-sessions
-cp -r learn-from-sessions/plugins/learn-from-sessions/skills/learn-from-sessions \
+git clone https://github.com/DivByZeroIT/dbz-skills
+cp -r dbz-skills/plugins/learn-from-sessions/skills/learn-from-sessions \
   ~/.claude/skills/learn-from-sessions
 ```
 
