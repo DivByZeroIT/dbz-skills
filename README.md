@@ -6,9 +6,9 @@ logs, finds **recurring failures and the fixes that resolved them** (plus the
 corrections you gave the agent), and **proposes** concrete rules to add to your
 `CLAUDE.md` / `MEMORY.md` — so the same mistakes stop wasting tokens.
 
-The failure-learning idea comes straight from **[headroom](https://github.com/chopratejas/headroom)**
-by Tejas Chopra; this skill distills just that one piece into a zero-infrastructure
-form. Big thanks to that project — go use it if you want the full platform.
+Inspired by **[headroom](https://github.com/chopratejas/headroom)** by Tejas
+Chopra — this skill distills its session-learning idea into a zero-infrastructure
+form.
 
 It never auto-edits anything: it shows you the proposed learnings and asks for
 approval before writing.
@@ -16,30 +16,12 @@ approval before writing.
 > ℹ️ This repo is the **`dbz-skills`** Claude Code plugin marketplace. Its first
 > (and currently only) plugin is **`learn-from-sessions`**, documented below.
 
-> **Inspired by [headroom](https://github.com/chopratejas/headroom).** Headroom is
-> a broad context-optimization toolkit (a compression proxy, MCP tools, cross-agent
-> memory, and an offline `learn` command). This project deliberately does **one
-> thing**: it extracts only the "learn from past sessions" idea and makes it lean —
-> a single skill, no proxy, no API key, no background services. If you want the
-> full platform, use headroom. If you just want session-driven `CLAUDE.md`
-> suggestions with zero infrastructure, use this.
-
-## How it differs from headroom's `learn`
-
-| | headroom `learn` | learn-from-sessions |
-|---|---|---|
-| Footprint | Python package + LiteLLM + optional proxy | one skill (`SKILL.md` + a ~300-line `scan.py`) |
-| The analysis LLM | external model via API key or a CLI subprocess | **the Claude agent you're already talking to** |
-| Writing | auto-writes marker blocks into your files | **proposes, you approve, then it writes** |
-| Scope | Claude Code, Codex, Gemini | Claude Code only |
-| Network / keys | needs an LLM backend | none — fully local |
-
-The deterministic half is a faithful port of headroom's scanner + digest builder
-(`headroom/learn/plugins/claude.py` + `analyzer._build_digest`): parse the JSONL
-logs in `~/.claude/projects/`, normalize and error-classify every tool call, and
-build a token-budgeted digest of the chronological event stream (tool calls,
-`USER:` messages, interruptions, subagent summaries). The LLM step and the
-auto-writer are what this project intentionally drops.
+It's intentionally lean: a single skill — no proxy, no API key, no background
+services. A small `scan.py` parses the JSONL logs in `~/.claude/projects/`,
+error-classifies every tool call, and builds a token-budgeted digest of the
+session event stream (tool calls, `USER:` messages, interruptions, subagent
+summaries). The "model" that turns that digest into rules is just **the Claude
+agent you're already talking to** — and it proposes, you approve, then it writes.
 
 ## Install
 
@@ -175,11 +157,9 @@ scan.py --max-tokens N   # digest budget (default 80000)
 
 ## Credits
 
-- Built on the ideas in **[headroom](https://github.com/chopratejas/headroom)** by
-  Tejas Chopra — specifically its offline failure-learning pipeline. Headroom is a
-  separate, more comprehensive project; please check it out if you want compression,
-  MCP tools, and multi-agent support.
-- This is an independent reimplementation of just the log-mining idea, not a fork.
+- Inspired by **[headroom](https://github.com/chopratejas/headroom)** by Tejas
+  Chopra — an independent reimplementation of just its session-learning idea, not
+  a fork. Check out headroom if you want the full context-optimization toolkit.
 
 ## License
 
