@@ -86,8 +86,11 @@ est. tokens/session saved · the digest line(s) that justify it. Then ask which 
 apply (all / a subset / none). If nothing clears the evidence bar, say so plainly.
 
 ### 5. Write what's approved
-For approved items, append/update inside a clearly marked, regenerable block so
-the edits are reversible and a re-run updates in place rather than duplicating:
+Two destinations, two different conventions — keep them separate.
+
+**CLAUDE.md** — stable project facts. Append/update inside a clearly marked,
+regenerable block so the edits are reversible and a re-run updates in place
+rather than duplicating:
 
 ```markdown
 <!-- learn-from-sessions:start -->
@@ -100,8 +103,20 @@ the edits are reversible and a re-run updates in place rather than duplicating:
 - If the block exists, replace matching sections and carry forward untouched ones
   (never silently drop prior learnings).
 - CLAUDE.md → project root (or `~/.claude/CLAUDE.md` if the project *is* home).
-- MEMORY.md → the path shown in the scanner header
-  (`~/.claude/projects/<encoded>/memory/MEMORY.md`); create the dir if needed.
+
+**MEMORY.md** — evolving preferences. Here `MEMORY.md` is an **index**, not a
+container; do **not** write the learning into `MEMORY.md` itself. For each
+approved item, in the memory dir shown in the scanner header
+(`~/.claude/projects/<encoded>/memory/`; create it if needed):
+
+- Write the fact to its **own file** `<slug>.md` with frontmatter (`name`,
+  `description`, `metadata.type: feedback | project`). For feedback/project
+  facts, follow the body with **Why:** and **How to apply:** lines.
+- Add a **one-line pointer** to `MEMORY.md`: `- [Title](<slug>.md) — hook`.
+  One line per memory — never put the fact's content in the index.
+- Before creating, check for an existing file that already covers it and update
+  that instead of creating a duplicate.
+
 - Use Read-before-Edit; show the diff you made.
 
 **Then mark these sessions as analyzed** so the next run skips them:

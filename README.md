@@ -6,6 +6,10 @@ logs, finds **recurring failures and the fixes that resolved them** (plus the
 corrections you gave the agent), and **proposes** concrete rules to add to your
 `CLAUDE.md` / `MEMORY.md` — so the same mistakes stop wasting tokens.
 
+The failure-learning idea comes straight from **[headroom](https://github.com/chopratejas/headroom)**
+by Tejas Chopra; this skill distills just that one piece into a zero-infrastructure
+form. Big thanks to that project — go use it if you want the full platform.
+
 It never auto-edits anything: it shows you the proposed learnings and asks for
 approval before writing.
 
@@ -85,6 +89,72 @@ only after you approve and it's committed (`scan.py --commit`), so aborting befo
 review re-surfaces the same sessions next time. Use `--full` to re-analyze
 everything. Accumulated rules live in your `CLAUDE.md` / `MEMORY.md`, so skipping
 old sessions never loses past learnings.
+
+## Example run
+
+Here is a full `/learn-from-sessions` on a small TypeScript project, end to end.
+
+**1. The scanner digests your sessions** (abbreviated — repeated failures and your
+corrections are what it keys on):
+
+```text
+SESSION 2026-06-10 14:02  (project: acme-web)
+  bash: npm test                  -> ERR  "Unknown command: test"
+  bash: npm run test              -> ERR  exit 1, "vitest: not found"
+  bash: pnpm vitest run           -> OK
+  USER: "we use pnpm here, not npm"
+  read: src/generated/schema.ts   -> 38.0k tokens
+  read: src/generated/schema.ts   -> 38.1k tokens   (read in full again)
+  bash: python parse.py           -> ERR  "command not found: python"
+  bash: python3 parse.py          -> OK
+```
+
+**2. It proposes — nothing is written yet.** You see a table grouped by
+destination, each row with its evidence count and the digest line that justifies
+it, and you pick which to apply:
+
+| Destination | Rule it suggests | Evidence | ~Tokens/session |
+|---|---|---|---|
+| `CLAUDE.md` · Commands | Run tests with `pnpm vitest run`; `npm test` / `npm run test` aren't wired up | 2 sessions | ~600 |
+| `CLAUDE.md` · Environment | Use `python3` — there is no `python` on `PATH` | 3 sessions | ~250 |
+| `CLAUDE.md` · Known-large files | `src/generated/schema.ts` is ~38k tokens — `grep`/`head` it, don't read in full | 4 reads | ~38k |
+| `MEMORY.md` · Preferences | User requires `pnpm` over `npm` for all package ops | 1 explicit correction | — |
+
+**3. You approve a subset; it writes them** — each destination in its own
+convention. Stable project facts go into a reversible block in `CLAUDE.md`:
+
+```markdown
+<!-- learn-from-sessions:start -->
+## Learned from sessions (2026-06-10)
+### Commands
+- Run tests with `pnpm vitest run`; `npm test` is not configured.
+### Known-large files
+- `src/generated/schema.ts` (~38k tokens) — grep or head it; avoid full reads.
+<!-- learn-from-sessions:end -->
+```
+
+The evolving preference goes into your memory **index** — a one-line pointer in
+`MEMORY.md`…
+
+```markdown
+- [Use pnpm, not npm](use-pnpm-not-npm.md) — user-enforced package manager
+```
+
+…backed by its own file `memory/use-pnpm-not-npm.md`:
+
+```markdown
+---
+name: use-pnpm-not-npm
+description: User requires pnpm for all package operations in acme-web
+metadata:
+  type: feedback
+---
+Always use `pnpm` for installs, scripts, and test runs — never `npm`.
+**Why:** the user corrected this explicitly ("we use pnpm here, not npm").
+**How to apply:** swap `npm …` → `pnpm …`; tests are `pnpm vitest run`.
+```
+
+Next run, those reads and retries don't happen — the agent already knows.
 
 ## Privacy
 
